@@ -11,6 +11,7 @@ function Post({ username, caption, imageURL }) {
           alt='candoganbaris'
           src='/static/images/avatar/1.jpg'
         />
+
         <h3>{username}</h3>
       </div>
       <img className='post__image' src={imageURL} alt='' />
