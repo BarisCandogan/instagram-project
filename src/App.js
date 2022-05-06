@@ -49,7 +49,13 @@ function App() {
     <div className='app'>
       <Modal open={open} onClose={() => setOpen(false)}>
         <div style={modalStyle} className={classes.paper}>
-          <h1>I am a modal</h1>
+          <center>
+            <img
+              className='app__headerImage'
+              src='https://marka-logo.com/wp-content/uploads/2020/04/Instagram-Logo.png'
+              alt=''
+            />
+          </center>
         </div>
       </Modal>
       <div className='app__header'>
