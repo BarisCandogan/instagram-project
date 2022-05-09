@@ -56,14 +56,16 @@ function App() {
   }, [user, username])
 
   useEffect(() => {
-    db.collection('posts').onSnapshot((snapshot) => {
-      setPosts(
-        snapshot.docs.map((doc) => ({
-          id: doc.id,
-          post: doc.data(),
-        }))
-      )
-    })
+    db.collection('posts')
+      .orderBy('timestamp', 'desc')
+      .onSnapshot((snapshot) => {
+        setPosts(
+          snapshot.docs.map((doc) => ({
+            id: doc.id,
+            post: doc.data(),
+          }))
+        )
+      })
   }, [])
 
   const signUp = (event) => {
@@ -89,11 +91,6 @@ function App() {
 
   return (
     <div className='app'>
-      {user?.displayName ? (
-        <ImageUpload username={user.displayName} />
-      ) : (
-        <h3>Sorry you need to login</h3>
-      )}
       <Modal open={open} onClose={() => setOpen(false)}>
         <div style={modalStyle} className={classes.paper}>
           <form className='app__signup'>
@@ -164,30 +161,40 @@ function App() {
           src='https://marka-logo.com/wp-content/uploads/2020/04/Instagram-Logo.png'
           alt=''
         />
+        {user ? (
+          <Button type='submit' onClick={() => auth.signOut()}>
+            Logout
+          </Button>
+        ) : (
+          <div className='app__logincontainer'>
+            <Button type='submit' onClick={() => setOpenSignIn(true)}>
+              Sign In
+            </Button>
+            <Button type='submit ' onClick={() => setOpen(true)}>
+              Sign Up
+            </Button>
+          </div>
+        )}
       </div>
-      {user ? (
-        <Button type='submit' onClick={() => auth.signOut()}>
-          Logout
-        </Button>
+      <div></div>
+
+      <div className='app__posts'>
+        {posts.map(({ id, post }) => (
+          <Post
+            key={id}
+            postId={id}
+            username={post.username}
+            caption={post.caption}
+            imageURL={post.imageURL}
+          />
+        ))}
+      </div>
+
+      {user?.displayName ? (
+        <ImageUpload username={user.displayName} />
       ) : (
-        <div className='app__logincontainer'>
-          <Button type='submit' onClick={() => setOpenSignIn(true)}>
-            Sign In
-          </Button>
-          <Button type='submit ' onClick={() => setOpen(true)}>
-            Sign Up
-          </Button>
-        </div>
+        <h3>Sorry you need to login</h3>
       )}
-      <h1>asjdnsajkdsan</h1>
-      {posts.map(({ id, post }) => (
-        <Post
-          key={id}
-          username={post.username}
-          caption={post.caption}
-          imageURL={post.imageURL}
-        />
-      ))}
     </div>
   )
 }
